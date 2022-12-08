@@ -22,7 +22,10 @@ jobs:
           pip install black
           pip install pytest
       - name: Lint with black
-        run: |
-          black --check --verbose
+        uses: psf/black@stable
+        with:
+          options: "--check --verbose"
+          src: "./src"
+          version: "~= 22.0"
       - name: Run tests with pytest
         run: pytest
