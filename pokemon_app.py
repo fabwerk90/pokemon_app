@@ -9,23 +9,25 @@ from bokeh.io import curdoc
 # set path, where raw data is located
 DATA_PATH = "data/pokemon_250_stats_and_imageurls.csv"
 
+
 def read_data_and_build_datasource(data_path):
     df = pd.read_csv(data_path)
 
     datasource = ColumnDataSource(
-    data={
-        "name": df["Name"],
-        "main_type": df["Type 1"],
-        "overall": df["Total"],
-        "health": df["HP"],
-        "attack": df["Attack"],
-        "defense": df["Defense"],
-        "speed": df["Speed"],
-        "imgs": df["image_urls"],
+        data={
+            "name": df["Name"],
+            "main_type": df["Type 1"],
+            "overall": df["Total"],
+            "health": df["HP"],
+            "attack": df["Attack"],
+            "defense": df["Defense"],
+            "speed": df["Speed"],
+            "imgs": df["image_urls"],
         }
     )
 
     return datasource
+
 
 def build_bokeh_plot():
 
@@ -58,6 +60,9 @@ def build_bokeh_plot():
     plot = figure(
         x_axis_label="Attack",
         y_axis_label="Defense",
+        x_range=[0,140],
+        y_range=[0,250],
+        x_minor_ticks=50,
         width=800,
         height=800,
         tooltips=TOOLTIPS,
@@ -66,11 +71,20 @@ def build_bokeh_plot():
     )
 
     # draw points onto the plot
-    plot.circle("attack", "defense", size=10, source=datasource)
+    plot.circle("attack",
+                "defense",
+                size=10,
+                fill_color='white',
+                line_color="cornflowerblue",
+                source=datasource)
 
-    curdoc().theme = 'dark_minimal'
+    # add dark theme
+    doc = curdoc()
+    doc.theme = "dark_minimal"
+    doc.add_root(plot)
 
     return plot
+
 
 ### build streamlit layout
 # start with header
